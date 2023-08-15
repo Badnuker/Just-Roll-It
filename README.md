@@ -1,6 +1,8 @@
 # Just Row It
 校内用来抽出一个大冤种帮所有人领外卖の小工具（~~就是个点名器~~）
 
+![WGSZ](https://img1.imgtp.com/2023/08/15/OWKu5GDl.png)
+
 ## 更新日志
 
 ### v1.0 
