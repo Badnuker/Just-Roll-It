@@ -7,11 +7,11 @@
 #define green 2
 using namespace std;
 
-string name, final, emptyString;
+string input_name, final_name, empty_string;
 
 int maxLen;
 
-vector<string> ans;
+vector<string> input_names;
 
 void Color(int color) {
 	switch (color) {
@@ -29,44 +29,61 @@ void HideCursor() {
 	SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursor_info);
 }
 
+pair<short, short> GetCursorPosition() {
+	CONSOLE_SCREEN_BUFFER_INFO cursor_info;
+	GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursor_info);
+	return {cursor_info.dwCursorPosition.X, cursor_info.dwCursorPosition.Y};
+}
+
+void SetCursorPosition(short x, short y) {
+	COORD coord = {x, y};
+	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
+}
+
+void LoadingScreen() {
+	SetConsoleTitleA("Loading...");
+	Color(white);
+	SetConsoleTitleA("Just-Row-it! By Badnuker");
+}
 
 void Input() {
-	Color(white);
 	cout << "Enter names separated by spaces or line breaks, ending with \"end\" :\n";
-	while (cin >> name) {
-		maxLen = max(maxLen, (int)name.size());
-		if (name == "end") {
+	while (cin >> input_name) {
+		maxLen = max(maxLen, (int)input_name.size());
+		if (input_name == "end") {
 			break;
 		}
-		ans.push_back(name);
+		input_names.push_back(input_name);
 	}
 	for (int i = 0; i <= maxLen; i++) {
-		emptyString = ' ' + emptyString;
+		empty_string = ' ' + empty_string;
 	}
 }
 
 void Extract() {
 	mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
-	cout << "\nExtracting...\n\n";
+	cout << "\nExtracting...\n\n\n";
 	Color(green);
 	for (int i = 1; i <= 50; i++) {
-		cout << ans[rnd() % ans.size()] << '\r';
+		cout << input_names[rnd() % input_names.size()] << '\r';
 		Sleep(150);
-		cout << emptyString << '\r';
+		cout << empty_string << '\r';
 	}
 	Color(white);
-	final = ans[rnd() % ans.size()];
+	final_name = input_names[rnd() % input_names.size()];
 }
 
 void Output() {
+	SetCursorPosition(GetCursorPosition().first, GetCursorPosition().second - 1);
 	cout << "----------\n";
 	Color(green);
-	cout << final << '\n';
+	cout << final_name << '\n';
 	Color(white);
 	cout << "----------\n";
 }
 
 int main() {
+	LoadingScreen();
 	Input();
 	HideCursor();
 	Extract();
@@ -74,3 +91,4 @@ int main() {
 	system("pause");
 	return 0;
 }
+
