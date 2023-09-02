@@ -3,8 +3,8 @@
 #include"windows.h"
 #include"my_console.h"
 
-#define white 0
-#define green 2
+#define WHITE 0
+#define GREEN 2
 
 using namespace std;
 
@@ -28,7 +28,7 @@ void Init() {
 		default_name_lists.push_back(default_name_list);
 		cin.clear();
 	}
-	SetConsoleColor(white);
+	SetConsoleColor(WHITE);
 }
 
 void LoadingScreen() {
@@ -119,13 +119,13 @@ void Extract() {
 	mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
 	HideCursor();
 	cout << "\nExtracting...\n\n\n";
-	SetConsoleColor(green);
+	SetConsoleColor(GREEN);
 	for (int i = 1; i <= 50; i++) {
 		cout << input_names[rnd() % input_names.size()] << '\r';
 		Sleep(150);
 		cout << empty_string << '\r';
 	}
-	SetConsoleColor(white);
+	SetConsoleColor(WHITE);
 	final_name = input_names[rnd() % input_names.size()];
 	for (int i = 0; i < (int)final_name.size(); i++) {
 		horizontal_rule = '-' + horizontal_rule;
@@ -135,9 +135,9 @@ void Extract() {
 void Output() {
 	SetCursorPosition(GetCursorPosition().first, GetCursorPosition().second - 1);
 	cout << horizontal_rule << '\n';
-	SetConsoleColor(green);
+	SetConsoleColor(GREEN);
 	cout << final_name << '\n';
-	SetConsoleColor(white);
+	SetConsoleColor(WHITE);
 	cout << horizontal_rule << '\n';
 }
 
