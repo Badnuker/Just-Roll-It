@@ -17,13 +17,13 @@ vector<string> input_names;
 
 void Init() {
 	rd_conf("default/default.conf");
-	for (int i = 0; i < (int)conf["default"]["default_count"].size(); i++) {
-		if (!isdigit(conf["default"]["default_count"][i])) {
+	for (int i = 0; i < (int)conf["default/default.conf"]["default_count"].size(); i++) {
+		if (!isdigit(conf["default/default.conf"]["default_count"][i])) {
 			cerr << "Wrong config file format! in the file \"default/default.conf\"\n";
 			exit(1);
 		}
 	}
-	default_name_list_count = atoi(conf["default"]["default_count"].c_str());
+	default_name_list_count = atoi(conf["default/default.conf"]["default_count"].c_str());
 	for (int i = 1; i <= default_name_list_count; i++) {
 		vector<string> default_name_list;
 		string default_name_list_file = "default/default_" + to_string(i) + ".list", name;
@@ -34,6 +34,7 @@ void Init() {
 		default_name_lists.push_back(default_name_list);
 		cin.clear();
 	}
+	freopen("CON", "r", stdin);
 	SetConsoleColor(WHITE);
 }
 
@@ -45,11 +46,10 @@ void LoadingScreen() {
 
 void Input() {
 	int max_len = 0;
-	freopen("CON", "r", stdin);
+loop1:
 	if (default_name_list_count == 0) {
 		cout << "There is no default name list.\n";
 	} else {
-	loop:
 		if (default_name_list_count == 1) {
 			cout << "There is 1 default name list. Use it?[y/n]: ";
 			string opt;
@@ -62,7 +62,7 @@ void Input() {
 			}
 			if (opt != "y" && opt != "n") {
 				cout << "\nInvalid input.\n\n";
-				goto loop;
+				goto loop1;
 			}
 			if (opt == "y") {
 				for (string name : default_name_lists[1]) {
@@ -88,13 +88,13 @@ void Input() {
 			if (!islegal) {
 				cout << "\nInvalid input.\n\n";
 				delete input_default_name_list_id;
-				goto loop;
+				goto loop1;
 			}
 			int default_name_list_id = atoi(input_default_name_list_id);
 			if (default_name_list_id > default_name_list_count) {
 				cout << "\nInvalid input.\n\n";
 				delete input_default_name_list_id;
-				goto loop;
+				goto loop1;
 			}
 			if (default_name_list_id) {
 				for (string name : default_name_lists[default_name_list_id]) {
@@ -115,6 +115,32 @@ void Input() {
 			break;
 		}
 		input_names.push_back(input_name);
+	}
+loop2:
+	cout << "\nSave them as default name list " << default_name_list_count + 1 << "?[y/n]: ";
+	string opt;
+	cin >> opt;
+	if (opt == "Y" || opt == "1" || opt == "true") {
+		opt = "y";
+	}
+	if (opt == "N" || opt == "0" || opt == "false") {
+		opt = "n";
+	}
+	if (opt != "y" && opt != "n") {
+		cout << "\nInvalid input.\n";
+		goto loop2;
+	}
+	if (opt == "y") {
+		upd_conf("default/default.conf", "default", "default_count", to_string(++default_name_list_count));
+		string new_default_file = "default/default_" + to_string(default_name_list_count) + ".list";
+		freopen(new_default_file.c_str(), "w", stdout);
+		cout.clear();
+		for (string name : input_names) {
+			cout << name << '\n';
+		}
+		freopen("CON", "w", stdout);
+		cout.clear();
+		cout << "\nDone!\n";
 	}
 	for (int i = 0; i <= max_len; i++) {
 		empty_string = ' ' + empty_string;
@@ -145,6 +171,8 @@ void Output() {
 	cout << final_name << '\n';
 	SetConsoleColor(WHITE);
 	cout << horizontal_rule << '\n';
+	system("pause");
+	cout.clear();
 }
 
 int main() {
@@ -152,7 +180,6 @@ int main() {
 	Input();
 	Extract();
 	Output();
-	system("pause");
 	return 0;
 }
 
