@@ -2,6 +2,7 @@
 
 #include"windows.h"
 #include"my_console.h"
+#include"my_rd_conf.h"
 
 #define WHITE 0
 #define GREEN 2
@@ -15,9 +16,14 @@ vector<vector<string>> default_name_lists = {{}};
 vector<string> input_names;
 
 void Init() {
-	freopen("default/default.conf", "r", stdin);
-	cin >> default_name_list_count;
-	cin.clear();
+	rd_conf("default/default.conf");
+	for (int i = 0; i < (int)conf["default"]["default_count"].size(); i++) {
+		if (!isdigit(conf["default"]["default_count"][i])) {
+			cerr << "Wrong config file format! in the file \"default/default.conf\"\n";
+			exit(1);
+		}
+	}
+	default_name_list_count = atoi(conf["default"]["default_count"].c_str());
 	for (int i = 1; i <= default_name_list_count; i++) {
 		vector<string> default_name_list;
 		string default_name_list_file = "default/default_" + to_string(i) + ".list", name;
