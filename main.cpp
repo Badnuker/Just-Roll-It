@@ -12,29 +12,32 @@ using namespace std;
 int default_name_list_count;
 string input_name, final_name, empty_string, horizontal_rule;
 
+map<string, map<string, string>> configs;
 vector<vector<string>> default_name_lists = {{}};
 vector<string> input_names;
 
 void Init() {
-	rd_conf("default/default.conf");
-	for (int i = 0; i < (int)conf["default/default.conf"]["default_count"].size(); i++) {
-		if (!isdigit(conf["default/default.conf"]["default_count"][i])) {
-			cerr << "Wrong config file format! in the file \"default/default.conf\"\n";
+	configs = rd_conf("config.ini");
+	string default_count = configs["default"]["default_count"];
+	for (int i = 0; i < (int)default_count.size(); i++) {
+		if (!isdigit(default_count[i])) {
+			cerr << "Wrong config format! in the table \"default\"\n";
 			exit(1);
 		}
 	}
-	default_name_list_count = atoi(conf["default/default.conf"]["default_count"].c_str());
+	default_name_list_count = atoi(default_count.c_str());
 	for (int i = 1; i <= default_name_list_count; i++) {
 		vector<string> default_name_list;
 		string default_name_list_file = "default/default_" + to_string(i) + ".list", name;
 		freopen(default_name_list_file.c_str(), "r", stdin);
+		cin.clear();
 		while (cin >> name) {
 			default_name_list.push_back(name);
 		}
 		default_name_lists.push_back(default_name_list);
-		cin.clear();
 	}
 	freopen("CON", "r", stdin);
+	cin.clear();
 	SetConsoleColor(WHITE);
 }
 
@@ -131,7 +134,7 @@ loop2:
 		goto loop2;
 	}
 	if (opt == "y") {
-		upd_conf("default/default.conf", "default", "default_count", to_string(++default_name_list_count));
+		upd_conf("config.ini", "default", "default_count", to_string(++default_name_list_count));
 		string new_default_file = "default/default_" + to_string(default_name_list_count) + ".list";
 		freopen(new_default_file.c_str(), "w", stdout);
 		cout.clear();
@@ -159,7 +162,7 @@ void Extract() {
 	}
 	SetConsoleColor(WHITE);
 	final_name = input_names[rnd() % input_names.size()];
-	for (int i = 0; i < (int)final_name.size(); i++) {
+	for (int i = 0; i <= (int)final_name.size(); i++) {
 		horizontal_rule = '-' + horizontal_rule;
 	}
 }
