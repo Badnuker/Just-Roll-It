@@ -44,7 +44,7 @@ void Init() {
 void LoadingScreen() {
 	SetConsoleTitleA("Loading...");
 	Init();
-	SetConsoleTitleA("Just-Row-it! By Badnuker");
+	SetConsoleTitleA("Just-Roll-it! By Badnuker");
 }
 
 void Input() {
